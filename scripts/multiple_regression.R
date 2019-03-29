@@ -4,6 +4,8 @@ if(require("pacman")=="FALSE"){
   install.packages("pacman")
 }
 
+
+
 pacman::p_load(rstudioapi, dplyr,magrittr, tidyr, reshape2, readxl, stringi,
                ggplot2,caret,corrplot,rpart,e1071)
 
@@ -15,8 +17,8 @@ setwd("..")
 rm(current_path)
 
 #Data sets
-existing<-read.csv("../multiple_regression/blackwells_multiple_regression/datasets/existingproductattributes2017.csv")
-new<-read.csv("../multiple_regression/blackwells_multiple_regression/datasets/newproductattributes2017.csv")
+existing<-read.csv("../blackwells_multiple_regression/datasets/existingproductattributes2017.csv")
+new<-read.csv("../blackwells_multiple_regression/datasets/newproductattributes2017.csv")
 str(existing)
 
 
@@ -68,14 +70,6 @@ corr_rel<-cor(readyData_rel)
 corr_rel
 corrplot(corr_rel)
 
-#### 1.2 decision tree ####
-
-
-#decision tree with only relevant attributes
-fit<-rpart(Volume~.,method = "class",data = readyData_rel)
-
-fit
-plot(fit)
 
 #### 2. PLOTTING ####
 #plotting bars to see the distribution of categorical variables
@@ -211,7 +205,7 @@ Pred_rf_rel<-predict(rf_rel,testing)
 Pred_rf_rel
 summary(Pred_rf_rel)
 
-#comparing prediction with real values: RMSE 252.254184, Rsquared 0.871624, MAE 150.044185
+#comparing prediction with real values: 
 postResample(Pred_rf_rel,testing$Volume)
 summary(postResample(Pred_rf_all,testing$Volume))
 
@@ -219,7 +213,6 @@ summary(postResample(Pred_rf_all,testing$Volume))
 knnFit_all <- train(Volume ~ ., data = training, method = "knn", trControl = cvtraincontrol, tuneLength=20)
 
 #training results from a knn model with all attributes:
-#k=5, rmse 268.6125, Rsquared 0.8096786,MAE 132.5638
 knnFit_all
 
 #creating the prediction of the model applied to the testing size
@@ -229,7 +222,7 @@ Pred_knn_all<-predict(knnFit_all,testing)
 Pred_knn_all
 summary(Pred_knn_all)
 
-#comparing prediction with real values: RMSE 352.112103, Rsquared 0.777198, MAE 205.688889
+#comparing prediction with real values: 
 postResample(Pred_knn_all,testing$Volume)
 summary(postResample(Pred_knn_all,testing$Volume))
 
@@ -240,7 +233,7 @@ summary(postResample(Pred_knn_all,testing$Volume))
 system.time(knn_rel <- train(Volume~x4StarReviews+x3StarReviews+PositiveServiceReview, data = training, method = "knn", trControl=cvtraincontrol))
 
 #training results from a knn model with 3 attributes:
-#k=5, rmse 262.8981, Rsquared 0.8650510,132.9468
+
 knn_rel
 
 #creating the prediction of the model applied to the testing size
